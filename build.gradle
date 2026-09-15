@@ -1,0 +1,87 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+group = 'com.igoridragon.avatar'
+version = '1.0.0'
+
+base {
+    archivesName = 'Avatar-FrontiersofPandora-Dragon-Edition'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                avatar {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+        }
+
+        server {
+            args '--nogui'
+        }
+    }
+}
+
+repositories {
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: '1.20.1',
+            minecraft_version_range: '[1.20.1,1.21)',
+            forge_version: '47.2.0',
+            forge_version_range: '[47.2.0,)',
+            loader_version_range: '[47,)',
+            mod_id: 'avatar',
+            mod_name: 'Avatar: Frontiers of Pandora - Dragon Edition',
+            mod_license: 'All Rights Reserved',
+            mod_version: project.version,
+            mod_authors: 'Igor Dragon',
+            mod_description: 'Avatar: Frontiers of Pandora inspired Minecraft mod.'
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : 'avatar',
+                'Specification-Vendor'   : 'Igor Dragon',
+                'Specification-Version'  : '1',
+                'Implementation-Title'   : project.name,
+                'Implementation-Version' : project.version,
+                'Implementation-Vendor'  : 'Igor Dragon'
+        ])
+    }
+
+    finalizedBy 'reobfJar'
+}
