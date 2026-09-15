@@ -4,7 +4,7 @@ license="All Rights Reserved"
 
 [[mods]]
 modId="avatar"
-version="${file.jarVersion}"
+version="1.0.0"
 displayName="Avatar: Frontiers of Pandora - Dragon Edition"
 authors="Igor Dragon"
 description='''
