@@ -6,9 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,17 +33,3 @@ jobs:
         with:
           name: Avatar-FrontiersofPandora-Dragon-Edition
           path: build/libs/*.jar
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: Avatar: Frontiers of Pandora - Dragon Edition v1.0.${{ github.run_number }}
-          body: |
-            ## Avatar: Frontiers of Pandora - Dragon Edition
-
-            Minecraft 1.20.1 Forge
-
-            Automated build from GitHub Actions.
-          files: build/libs/*.jar
-          generate_release_notes: true
