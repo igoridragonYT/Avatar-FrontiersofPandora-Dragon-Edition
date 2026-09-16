@@ -8,11 +8,12 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: write
 
 jobs:
   release:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -21,14 +22,14 @@ jobs:
         with:
           name: Avatar-FrontiersofPandora-Dragon-Edition
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.workflow_run.id }}
           path: release
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.${{ github.event.workflow_run.run_number }}
-          name: Avatar: Frontiers of Pandora - Dragon Edition v1.0.${{ github.event.workflow_run.run_number }}
+          tag_name: v1.0.${{ github.run_number }}
+          name: Avatar: Frontiers of Pandora - Dragon Edition v1.0.${{ github.run_number }}
           body: |
             ## Avatar: Frontiers of Pandora - Dragon Edition
 
